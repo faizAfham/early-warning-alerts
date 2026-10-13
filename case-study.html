@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Early Warning Alerts Report</title>
+<style>
+  @page { size: A4; margin: 14mm 14mm 16mm; }
+  :root { --ink:#1b1f24; --muted:#5f6670; --line:#dfe2e6; --accent:#1f3a5f; --soft:#f2f4f7; }
+  * { box-sizing: border-box; }
+  body { font: 10pt/1.45 -apple-system, "Helvetica Neue", Arial, sans-serif; color: var(--ink); margin: 0; background:#fff; }
+  h2 { font-size: 13pt; margin: 18px 0 8px; padding-bottom: 4px; border-bottom: 2px solid var(--ink); }
+  h3 { font-size: 10.5pt; margin: 12px 0 4px; }
+  h2, h3 { break-after: avoid; }
+  p { margin: 0 0 7px; }
+  table { width: 100%; border-collapse: collapse; font-size: 8.8pt; margin: 6px 0 8px; }
+  th, td { text-align: left; padding: 4px 7px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { background: var(--soft); font-weight: 700; }
+  td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
+  tr.hl td { background: var(--soft); font-weight: 600; }
+  table, figure, .two, .three, .flow, .q, .callout, .card, .stats, tr, pre { break-inside: avoid; }
+  .q { background: var(--soft); border-left: 4px solid var(--accent); padding: 9px 13px; margin: 8px 0; }
+  .q p { margin-bottom: 5px; }
+  .callout { background: var(--soft); border-left: 4px solid var(--accent); padding: 8px 12px; margin: 8px 0; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 10px 0; }
+  .stat { border: 1px solid var(--line); border-radius: 6px; padding: 9px; }
+  .stat b { display: block; font-size: 17pt; line-height: 1.1; color: var(--accent); }
+  .stat span { font-size: 8.3pt; color: var(--muted); }
+  .flow { display: flex; gap: 5px; margin: 8px 0; align-items: stretch; }
+  .flow div { flex: 1; background: var(--soft); border-radius: 6px; padding: 7px; font-size: 8.5pt; }
+  .flow div b { display:block; font-size: 9pt; color: var(--accent); }
+  .flow .a { flex: 0 0 12px; background:none; padding:0; display:flex; align-items:center; justify-content:center; color: var(--muted); }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .card { border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; font-size: 8.8pt; }
+  figure { margin: 8px 0; }
+  figure img { width: 100%; max-height: 92mm; object-fit: contain; border: 1px solid var(--line); border-radius: 4px; }
+  figcaption { font-size: 8.3pt; color: var(--muted); margin-top: 3px; }
+  ul, ol { margin: 3px 0 7px; padding-left: 18px; } li { margin-bottom: 2px; }
+  .note { font-size: 8.3pt; color: var(--muted); }
+  .takeaway { font-weight: 600; }
+  .tag { display:inline-block; font-size: 8pt; padding: 0 7px; border-radius: 10px; font-weight: 700; border: 1px solid var(--ink); }
+  code { font-family: Menlo, Consolas, monospace; font-size: 8.3pt; }
+  pre { font-family: Menlo, Consolas, monospace; font-size: 7.6pt; line-height: 1.4; background: var(--soft); border-left: 4px solid var(--accent); padding: 7px 10px; margin: 6px 0 8px; white-space: pre-wrap; }
+  pre .c { color: var(--muted); }
+  .ctrl { margin: 0 0 6px; } .ctrl th { width: 16%; } .ctrl td { width: 34%; }
+  .credit { font-size: 8.3pt; color: var(--muted); border-top: 1px solid var(--line); padding-top: 6px; margin-top: 14px; }
+  .cover { height: 265mm; display: flex; flex-direction: column; break-after: page; }
+  .cover .top { border-top: 6px solid var(--accent); padding-top: 14px; display:flex; justify-content: space-between; font-size: 9pt; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+  .cover .mid { margin-top: 62mm; }
+  .cover .doc { font-size: 10pt; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); font-weight: 700; }
+  .cover h1 { font-size: 34pt; line-height: 1.1; margin: 8px 0 6px; letter-spacing: -1px; }
+  .cover .tagline { font-size: 14pt; color: var(--muted); max-width: 155mm; line-height: 1.35; }
+  .cover .rule { width: 40mm; height: 2px; background: var(--ink); margin: 18px 0; }
+  .cover .toc { font-size: 10pt; columns: 2; max-width: 150mm; padding-left: 18px; margin: 0; }
+  .cover .toc li { margin-bottom: 4px; }
+  .cover .bottom { margin-top: auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; border-top: 1px solid var(--line); padding-top: 10px; font-size: 9pt; }
+  .cover .bottom b { display:block; font-size: 7.5pt; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); font-weight: 600; margin-bottom: 2px; }
+  .pb { break-before: page; }
+</style>
+</head>
+<body>
+
+<section class="cover">
+  <div class="top"><span>Product Analytics Report</span><span>v1.0 · October 2026</span></div>
+  <div class="mid">
+    <div class="doc">Patient Monitoring · PhysioNet open ICU data</div>
+    <h1>Catching Patients Early Without Drowning the Ward in Alarms</h1>
+    <div class="tagline">A SQL-first look at early-warning alert rules on 1.55 million hours of vital signs from 40,336 ICU stays: how many sepsis patients each rule catches, how early, how many alarms it costs, and what a heart-rate + breathing-rate sensor alone can do.</div>
+    <div class="rule"></div>
+    <ol class="toc">
+      <li>Data and method</li>
+      <li>The alert-fatigue problem</li>
+      <li>Smarter rules, same catch rate</li>
+      <li>Two vitals vs five</li>
+      <li>What drives false alarms</li>
+      <li>Product recommendations</li>
+      <li>Limitations</li>
+      <li>Appendix: SQL files</li>
+    </ol>
+  </div>
+  <div class="bottom">
+    <div><b>Analyst</b>Mohammad Faiz Ahmad</div>
+    <div><b>Institution</b>IIT Patna</div>
+    <div><b>Data</b>PhysioNet / CinC Challenge 2019 (CC BY 4.0)</div>
+    <div><b>Tools</b>SQL (DuckDB) · Python · pandas · matplotlib</div>
+  </div>
+</section>
+
+<table class="ctrl">
+  <tr><th>Analyst</th><td>Mohammad Faiz Ahmad, IIT Patna</td><th>Status</th><td>Final</td></tr>
+  <tr><th>Data source</th><td>PhysioNet/Computing in Cardiology Challenge 2019, training sets A and B (Reyna et al., <i>Crit Care Med</i> 2020)</td><th>Coverage</th><td>All 40,336 ICU stays, 1,552,210 patient-hours (no sampling)</td></tr>
+</table>
+
+<h2>Executive summary</h2>
+<div class="q">
+<p><b>Question.</b> An early warning is only useful if staff still trust it. How much early catch does a standard vital-sign alert rule buy, how many alarms does the ward pay for it, and can a better rule or a simpler sensor change that trade?</p>
+<p style="margin:0"><b>Answer in one line.</b> The standard NEWS2 ≥ 5 rule catches 6 in 10 sepsis patients about 10 hours early, but only about 1 in 34 alarms comes before a real sepsis case. Requiring the score to stay high for 2 hours (at a threshold of 4) keeps the same catch rate with 28% fewer alarms, and heart rate + breathing rate alone get within 2 points of the full five-vital score at the same alarm load.</p>
+</div>
+<div class="stats">
+  <div class="stat"><b>59.7%</b><span>of sepsis patients alerted in the 12 h before onset by NEWS2 ≥ 5 (median 10 h early)</span></div>
+  <div class="stat"><b>2.9%</b><span>of NEWS2 ≥ 5 alarms come before a sepsis onset (1.26 alarms per patient-day)</span></div>
+  <div class="stat"><b>−28%</b><span>alarms with "score ≥ 4 for 2 hours", at the same 59.6% catch rate</span></div>
+  <div class="stat"><b>57.6%</b><span>catch rate from heart rate + breathing rate alone at the NEWS2 ≥ 5 alarm load</span></div>
+</div>
+
+<h2>1 · Data and method</h2>
+<div class="flow">
+  <div><b>Acquire</b>40,336 per-patient files from PhysioNet's open S3 mirror</div><div class="a">→</div>
+  <div><b>Merge</b>One file with a patient id; header checked on every file</div><div class="a">→</div>
+  <div><b>Query</b>5 numbered SQL files: window functions (LAG, LOCF), CASE scoring, grid CROSS JOIN</div><div class="a">→</div>
+  <div><b>Check</b>Assert row and patient counts, monotonic trade-off curves, one cohort per rule</div>
+</div>
+<div class="two">
+<div>
+<h3>Cohort</h3>
+<table>
+  <tr><th>Group</th><th class="n">Stays</th><th>Use</th></tr>
+  <tr><td>No sepsis</td><td class="n">37,404</td><td>Every hour scored; all their alarms are false for this question</td></tr>
+  <tr><td>Sepsis during the stay</td><td class="n">2,506</td><td>Hours before onset scored; the 12 h before onset is the "catch window"</td></tr>
+  <tr><td>Septic on arrival</td><td class="n">426</td><td>Excluded: nothing left to warn about</td></tr>
+  <tr class="hl"><td>Total</td><td class="n">40,336</td><td>1,539,289 patient-hours scored</td></tr>
+</table>
+<p class="note">PhysioNet shifts the sepsis label 6 hours early, so onset = first labelled hour + 6. Onset follows the Sepsis-3 definition.</p>
+</div>
+<div>
+<h3>Score and metric definitions</h3>
+<table>
+  <tr><th>Term</th><th>Definition</th></tr>
+  <tr><td>Modified NEWS2</td><td>NEWS2 points for respiratory rate, SpO2, systolic BP, heart rate, temperature (0–15). No consciousness or oxygen-support fields in the data</td></tr>
+  <tr><td>HR + RR score</td><td>Only the heart-rate and breathing-rate points (0–6): what a contactless under-mattress sensor reads</td></tr>
+  <tr><td>Alarm</td><td>Fires when the score reaches the threshold (optionally for 2 hours in a row); a standing alarm counts once</td></tr>
+  <tr><td>Catch rate</td><td>Sepsis patients with an alarm on in the 12 h before onset</td></tr>
+  <tr><td>Precision</td><td>Alarms fired in a catch window ÷ all alarms</td></tr>
+</table>
+<p class="note">Vitals are carried forward from the last reading (what a monitor would still show). Never-measured vitals score 0.</p>
+</div>
+</div>
+
+<h2 class="pb">2 · The alert-fatigue problem</h2>
+<p>The ward-standard trigger, <b>NEWS2 ≥ 5</b>, puts an alarm on <b>59.7%</b> of sepsis patients in the 12 hours before onset, with a median lead of <b>10 hours</b>. The cost is <b>1.26 alarms per patient-day</b>, and only <b>2.9%</b> of those alarms fire in a catch window. Put simply, a nurse answers about <b>34 alarms for every one</b> that comes before a sepsis case.</p>
+<table>
+  <tr><th>Rule (all 5 vitals)</th><th class="n">Catch rate</th><th class="n">Median lead</th><th class="n">Alarms / patient-day</th><th class="n">Precision</th></tr>
+  <tr><td>Score ≥ 3</td><td class="n">88.6%</td><td class="n">12 h</td><td class="n">2.62</td><td class="n">1.8%</td></tr>
+  <tr><td>Score ≥ 4</td><td class="n">76.9%</td><td class="n">11 h</td><td class="n">1.94</td><td class="n">2.3%</td></tr>
+  <tr class="hl"><td>Score ≥ 5 (NEWS2 "medium")</td><td class="n">59.7%</td><td class="n">10 h</td><td class="n">1.26</td><td class="n">2.9%</td></tr>
+  <tr><td>Score ≥ 6</td><td class="n">42.6%</td><td class="n">9 h</td><td class="n">0.73</td><td class="n">3.4%</td></tr>
+  <tr><td>Score ≥ 7 (NEWS2 "high")</td><td class="n">27.4%</td><td class="n">8 h</td><td class="n">0.37</td><td class="n">4.2%</td></tr>
+</table>
+<p class="note">Median lead is capped at 12 h by the window. Below a threshold of 3 the alarm is on most of the time (38% of all hours at ≥ 3, 76% at ≥ 1), so it stops being a signal at all.</p>
+<p class="takeaway">Raising the threshold buys precision slowly and loses catches quickly: going from ≥ 5 to ≥ 7 cuts alarms by 70% but loses more than half the catches, while precision only goes from 2.9% to 4.2%. Moving the threshold alone cannot fix alert fatigue.</p>
+
+<h2>3 · Smarter rules, same catch rate</h2>
+<p>A simple suppression rule waits until the score has been high for <b>2 hours in a row</b>. At the same threshold of 5, it cuts alarms by <b>58%</b> (1.26 → 0.53 per patient-day) but drops the catch rate by <b>18.8 points</b> (59.7% → 40.9%). The better use of persistence is to <b>lower the threshold and add the wait</b>:</p>
+<table>
+  <tr><th>Rule</th><th class="n">Catch rate</th><th class="n">Median lead</th><th class="n">Alarms / patient-day</th></tr>
+  <tr><td>Score ≥ 5, fire at once (standard)</td><td class="n">59.7%</td><td class="n">10 h</td><td class="n">1.26</td></tr>
+  <tr class="hl"><td>Score ≥ 4, fire after 2 high hours</td><td class="n">59.6%</td><td class="n">10 h</td><td class="n">0.91 (−28%)</td></tr>
+</table>
+<figure><img src="charts/2_persistence.png" alt="Alarms per patient-day, fire at once vs after 2 high hours, thresholds 3 to 7"><figcaption>Figure 1 · Waiting for a second high hour cuts alarms by 47–66% depending on the threshold. Most single-hour spikes do not persist.</figcaption></figure>
+
+<h2 class="pb">4 · Two vitals vs five</h2>
+<p>A contactless under-mattress sensor reads <b>heart rate and breathing rate</b>, continuously and without a nurse. Can those two alone stand in for the five charted vitals? Comparing the two scores <b>at the same alarm load</b> (the only fair comparison, because their scales differ): at NEWS2 ≥ 5's load of 1.26 alarms per patient-day, the HR + RR score catches <b>57.6%</b> vs <b>59.7%</b> for all five vitals. That is <b>96%</b> of the detection with two signals.</p>
+<figure><img src="charts/1_catch_vs_load.png" alt="Catch rate vs alarms per patient-day for the full score and HR+RR score"><figcaption>Figure 2 · The two trade-off curves sit almost on top of each other from 0.05 to 1.7 alarms per patient-day. Labels show each threshold.</figcaption></figure>
+<p>Freshness matters too. Even in this ICU data, the "current" value is a fresh reading in only <b>90%</b> of hours for heart rate, <b>85%</b> for breathing rate and <b>34%</b> for temperature; the rest are carried forward. On a general ward, where vitals are charted every 4–6 hours, the gap is far larger. That is the case for continuous HR + RR, rather than for more vitals.</p>
+
+<h2>5 · What drives false alarms</h2>
+<figure><img src="charts/3_false_alarm_drivers.png" alt="Share of false high-score hours where each vital adds 2 or more points"><figcaption>Figure 3 · In patients who never develop sepsis, breathing rate is involved in 83% of hours with a score of 5 or more.</figcaption></figure>
+<p class="takeaway">Breathing rate is both the strongest signal and the biggest source of noise. For a product built on HR + RR, the accuracy and smoothing of the breathing-rate reading decide the alarm burden more than any threshold choice.</p>
+
+<h2 class="pb">6 · Product recommendations (for a contactless monitoring product)</h2>
+<ol>
+  <li><b>Track one north-star metric with a guardrail:</b> deteriorations caught ≥ 6 h early per 100 bed-days (north star), against alarms per bed per day (guardrail). Report both in every hospital review, never one alone.</li>
+  <li><b>Ship persistence plus a lower threshold, not a higher threshold.</b> In this data it keeps the catch rate and removes 28% of alarms. A/B it by ward: randomize the rule, and measure alarm acknowledgement time and missed escalations.</li>
+  <li><b>Invest in breathing-rate quality first.</b> It drives 83% of false high scores. Gains there lower the alarm load for every rule.</li>
+  <li><b>Sell continuity, not more vitals.</b> HR + RR keeps 96% of the five-vital catch rate at the same load, and is fresh every hour where charting is not.</li>
+  <li><b>Instrument the nurse's side of the funnel:</b> alarm → seen → acknowledged → escalated → outcome. Precision of 3% is only tolerable if each alarm is cheap to clear.</li>
+</ol>
+
+<h2>7 · Limitations</h2>
+<ul>
+  <li><b>ICU, not wards or homes.</b> ICU patients are sicker and charted hourly; ward and home rates will differ.</li>
+  <li><b>Sepsis stands in for "getting worse".</b> Some "false" alarms are real deterioration of another kind, so precision is a lower bound.</li>
+  <li><b>Retrospective scoring of charted values</b>, carried forward between readings. No real alarms or nurse responses were observed.</li>
+  <li><b>Modified NEWS2</b> without consciousness or oxygen support, so absolute scores run lower than the full NEWS2.</li>
+  <li><b>No Dozee data or claims are used.</b> "HR + RR" approximates what such a sensor reads; its real accuracy is not modelled.</li>
+</ul>
+
+<h2>Appendix · SQL files and reproducibility</h2>
+<table>
+  <tr><th>File</th><th>What it does</th></tr>
+  <tr><td><code>01_cohort.sql</code></td><td>One row per stay; onset hour; no-sepsis / sepsis / septic-on-arrival</td></tr>
+  <tr><td><code>02_hourly_scores.sql</code></td><td>Carry-forward vitals (<code>last_value … IGNORE NULLS</code>), NEWS2 points, both scores, catch window</td></tr>
+  <tr><td><code>03_rule_grid.sql</code></td><td>30 rules (score × threshold × persistence); <code>LAG</code> for persistence and alarm on-switch; catch rate, lead, load, precision</td></tr>
+  <tr><td><code>04_measurement_gaps.sql</code></td><td>Share of hours with a fresh reading per vital</td></tr>
+  <tr><td><code>05_false_alarm_drivers.sql</code></td><td>Which vitals push no-sepsis patients to a score of 5+</td></tr>
+</table>
+<pre><span class="c"># reproduce (~1 min after download)</span>
+./download_data.sh && python run.py   <span class="c"># results/*.csv, results/summary.json, charts/*.png</span></pre>
+<div class="credit">Data: Reyna MA et al. Early Prediction of Sepsis From Clinical Data: The PhysioNet/Computing in Cardiology Challenge 2019. <i>Crit Care Med</i> 2020;48(2):210–217. PhysioNet, CC BY 4.0. Analysis and any errors are the author's own.</div>
+</body>
+</html>
